@@ -27,7 +27,7 @@ $(function () {
                 var _data = {'_token':_token, 'id':id};
                 $.post("/content/del", _data, function (data) {
                     if(data.status == 0){
-                        layer.msg(data.message, function () {
+                        layer.msg(data.message,{'time':1000}, function () {
                             window.location.reload();
                         });
                         return;
