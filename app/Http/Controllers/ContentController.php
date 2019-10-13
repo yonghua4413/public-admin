@@ -17,6 +17,20 @@ class ContentController extends Controller
         ]
     ];
 
+    private function checkUserAuth(int $record_id)
+    {
+        $create_id = $this->admin['id'];
+        if ($create_id == 1) {
+            return true;
+        }
+        $where = [['id', '=', $record_id], ['create_id', '=', $create_id]];
+        $has = app(ContentRepository::class)->checkExists($where);
+        if ($has) {
+            return true;
+        }
+        return false;
+    }
+
     public function showArticleList(ContentRepository $contentRepository)
     {
         $data['title'] = "";
@@ -83,10 +97,14 @@ class ContentController extends Controller
 
     public function showUpDataContent(ContentRepository $contentRepository)
     {
+        $id = $this->request->get("id");
+        if(!$this->checkUserAuth($id)){
+            return response("page not fund", 404);
+        }
         $data['class'] = [];
         $data['push'] = [];
         $data['info'] = [];
-        $where = ['id' => $this->request->get("id")];
+        $where = ['id' => $id];
         $info = $contentRepository->getContent($where);
         if(!$info){
             return response("page not fund", 404);
@@ -128,7 +146,12 @@ class ContentController extends Controller
         return $this->helper->returnJson([0, $post, "添加成功"]);
     }
 
-    public function upDateContent(ContentRepository $contentRepository){
+    public function upDateContent(ContentRepository $contentRepository)
+    {
+        $id = $this->request->post("id");
+        if(!$this->checkUserAuth($id)){
+            return response("page not fund", 404);
+        }
         $validator = Validator::make($this->request->post(), [
             'title' => 'required',
             'keywords' => 'required',
@@ -140,7 +163,6 @@ class ContentController extends Controller
             return $this->helper->returnJson([1, [], $validator->errors()->first()]);
         }
         $post = $this->request->post();
-        $id = $post['id'];
         unset($post["_token"], $post['id']);
 
         $post['content'] = htmlspecialchars($post['content']);
@@ -169,7 +191,11 @@ class ContentController extends Controller
 
     public function delContent(ContentRepository $contentRepository)
     {
-        $where = ['id' => $this->request->get("id")];
+        $id = $this->request->get("id");
+        if(!$this->checkUserAuth($id)){
+            return response("page not fund", 404);
+        }
+        $where = ['id' => $id];
         $change = $contentRepository->upDateContent($where, ['is_del' => 1]);
         if($change){
             return $this->helper->returnJson([0, [], "删除成功"]);

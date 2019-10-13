@@ -54,4 +54,9 @@ class ContentRepository
     {
         return DB::table('article')->where($where)->first($field);
     }
+
+    public function checkExists($where)
+    {
+        return DB::table('article')->where($where)->exists();
+    }
 }
