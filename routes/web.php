@@ -17,6 +17,7 @@ Route::post('/login/doVerify', "LoginController@doVerify")->name('doVerify');
 
 Route::group(['middleware' => \App\Http\Middleware\AdminMiddleware::class], function () {
     Route::get('/', "HomeController@showHome")->name('home');
+    //文章
     Route::get('/content/list', "ContentController@showArticleList");
     Route::get('/content/add', "ContentController@showAddContent");
     Route::get('/content/edit', "ContentController@showUpDataContent");
@@ -24,5 +25,7 @@ Route::group(['middleware' => \App\Http\Middleware\AdminMiddleware::class], func
     Route::post('/content/update', "ContentController@upDateContent");
     Route::post('/content/del', "ContentController@delContent");
     Route::get('/content/preview', "ContentController@showPreview");
+    //分类
+    Route::get('/content/classify', "ContentController@showClassify");
 });
 

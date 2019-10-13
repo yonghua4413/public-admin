@@ -202,4 +202,9 @@ class ContentController extends Controller
         }
         return $this->helper->returnJson([0, [], "操作失败， 请重试！"]);
     }
+
+    public function showClassify(ContentRepository $contentRepository)
+    {
+        return view('content/classify/list');
+    }
 }
