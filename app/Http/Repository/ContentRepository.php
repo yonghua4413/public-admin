@@ -59,4 +59,14 @@ class ContentRepository
     {
         return DB::table('article')->where($where)->exists();
     }
+
+    /**
+     * @param array $where
+     * @param array $field
+     * @return \Illuminate\Support\Collection
+     */
+    public function getContentClassifyList(array $where, array $field = ['*'])
+    {
+        return DB::table('article_class')->where($where)->get($field);
+    }
 }

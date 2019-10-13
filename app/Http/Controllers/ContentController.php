@@ -205,6 +205,8 @@ class ContentController extends Controller
 
     public function showClassify(ContentRepository $contentRepository)
     {
-        return view('content/classify/list');
+        $data['title'] = "";
+        $data['list'] = $contentRepository->getContentClassifyList([]);
+        return view('content/classify/list', $data);
     }
 }

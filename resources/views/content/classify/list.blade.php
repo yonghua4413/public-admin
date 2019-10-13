@@ -38,7 +38,7 @@
                         <button type="submit" class="btn btn-w-m btn-primary"><i class="fa fa-search"></i> 搜 索 </button>
                     </div>
                 </div>
-                <div class="col-sm-7 hidden-xs">
+                <div class="col-sm-9 hidden-xs">
                     <div class="form-group" style="float: right;margin-right: 0px;">
                         <button class="btn btn-w-m btn-info add-content"><i class="fa fa-plus-circle"></i> 添加 </button>
                     </div>
@@ -58,28 +58,24 @@
                             <th data-toggle="true">ID</th>
                             <th data-toggle="true">分类名称</th>
                             <th data-toggle="true">等级</th>
-                            <th data-hide="phone">封面图</th>
                             <th data-hide="phone">创建时间</th>
                             <th data-hide="phone">显示</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody id="layer-photos">
-                        @foreach($builder->items() as $key => $item)
+                        @foreach($list as $key => $item)
                         <tr>
                             <td class="text-center" data-toggle="true">{{$item->id}}</td>
-                            <td class="text-center" data-toggle="true">{{$item->title}}</td>
                             <td class="text-center" data-toggle="true">{{$item->class_name}}</td>
-                            <td class="text-center" data-hide="phone">
-                                <img style="width: 25px;height: 25px;" src="{{$item->cover_img}}">
-                            </td>
+                            <td class="text-center" data-toggle="true"></td>
                             <td class="text-center" data-hide="phone">{{$item->created_at}}</td>
-                            <td class="text-center" data-hide="phone">{{$item->is_show_text}}</td>
+                            <td class="text-center" data-hide="phone"></td>
                             <td class="text-center" style="min-width: 230px;">
                                 <button class="btn btn-sm btn-info edit" data-id="{{$item->id}}">
                                     <i class="fa fa-edit"></i> 编辑
                                 </button>
-                                <button class="btn btn-sm btn-danger del" data-title="{{$item->title}}" data-id="{{$item->id}}">
+                                <button class="btn btn-sm btn-danger del" data-title="{{$item->class_name}}" data-id="{{$item->id}}">
                                     <i class="fa fa-times"></i> 删除
                                 </button>
                             </td>
@@ -87,9 +83,6 @@
                         @endforeach
                         </tbody>
                     </table>
-                </div>
-                <div class="ibox-content text-center">
-                    {{$builder->appends(['title' => $title])->links()}}
                 </div>
             </div>
         </div>
