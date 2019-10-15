@@ -205,8 +205,26 @@ class ContentController extends Controller
 
     public function showClassify(ContentRepository $contentRepository)
     {
-        $data['title'] = "";
-        $data['list'] = $contentRepository->getContentClassifyList([]);
+        $data['list'] = [];
+        $list = $contentRepository->getContentClassifyList([]);
+        if($list){
+            $data['list'] = $this->disposeLoopMenus($list);
+        }
+        dd($data);
         return view('content/classify/list', $data);
+    }
+
+    private function disposeLoopMenus($list, $pid = 0)
+    {
+        $data = [];
+        foreach ($list as $key => $value){
+            $value->child = [];
+            if($value->pid == $pid){
+                array_push($data, $value);
+            }
+            return $this->disposeLoopMenus($list, $value->id);
+        }
+
+        return $data;
     }
 }

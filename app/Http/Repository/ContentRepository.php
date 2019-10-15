@@ -67,6 +67,9 @@ class ContentRepository
      */
     public function getContentClassifyList(array $where, array $field = ['*'])
     {
-        return DB::table('article_class')->where($where)->get($field);
+        return DB::table('article_class')
+            ->where($where)
+            ->orderBy('sort', 'desc')
+            ->get($field);
     }
 }

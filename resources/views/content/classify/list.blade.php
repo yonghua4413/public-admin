@@ -27,66 +27,72 @@
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
     <div class="ibox-content m-b-sm border-bottom">
         <div class="row">
-            <form>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <input type="text" name="title" value="{{$title}}" placeholder="请输入类名称" class="form-control">
-                    </div>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <button class="btn btn-w-m btn-info add-content"><i class="fa fa-plus-circle"></i> 添加 </button>
                 </div>
-                <div class="col-sm-1">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-w-m btn-primary"><i class="fa fa-search"></i> 搜 索 </button>
-                    </div>
-                </div>
-                <div class="col-sm-9 hidden-xs">
-                    <div class="form-group" style="float: right;margin-right: 0px;">
-                        <button class="btn btn-w-m btn-info add-content"><i class="fa fa-plus-circle"></i> 添加 </button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-
     </div>
 
+    @if($father)
+    @foreach($father as $key => $item)
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
+                <div class="ibox-title">
+                    <h5>
+                        {{$item->class_name}}
+                    </h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a>
+                            <i class="fa fa-minus-circle"></i>
+                        </a>
+                        <a>
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
                 <div class="ibox-content table-responsive">
                     <table style="border: 1px solid #e7eaec;" class="table table-bordered table-striped">
                         <thead>
                         <tr>
                             <th data-toggle="true">ID</th>
                             <th data-toggle="true">分类名称</th>
-                            <th data-toggle="true">等级</th>
                             <th data-hide="phone">创建时间</th>
                             <th data-hide="phone">显示</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody id="layer-photos">
-                        @foreach($list as $key => $item)
                         <tr>
                             <td class="text-center" data-toggle="true">{{$item->id}}</td>
                             <td class="text-center" data-toggle="true">{{$item->class_name}}</td>
-                            <td class="text-center" data-toggle="true"></td>
                             <td class="text-center" data-hide="phone">{{$item->created_at}}</td>
                             <td class="text-center" data-hide="phone"></td>
                             <td class="text-center" style="min-width: 230px;">
                                 <button class="btn btn-sm btn-info edit" data-id="{{$item->id}}">
                                     <i class="fa fa-edit"></i> 编辑
                                 </button>
+                                <button class="btn btn-sm btn-info edit" data-id="{{$item->id}}">
+                                    <i class="fa fa-minus-circle"></i> 隐藏
+                                </button>
                                 <button class="btn btn-sm btn-danger del" data-title="{{$item->class_name}}" data-id="{{$item->id}}">
                                     <i class="fa fa-times"></i> 删除
                                 </button>
                             </td>
                         </tr>
-                        @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    @endforeach
+    @endif
 </div>
 @endsection
 
