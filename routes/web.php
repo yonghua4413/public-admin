@@ -15,6 +15,8 @@ Route::get('/login', "LoginController@showLogin")->name('login');
 Route::get('/login/out', "LoginController@loginOut")->name('loginOut');
 Route::post('/login/doVerify', "LoginController@doVerify")->name('doVerify');
 
+Route::get('/test', "TestController@test");
+
 Route::group(['middleware' => \App\Http\Middleware\AdminMiddleware::class], function () {
     Route::get('/', "HomeController@showHome")->name('home');
     //文章
