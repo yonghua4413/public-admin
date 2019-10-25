@@ -35,26 +35,14 @@
         </div>
     </div>
 
-    @if($father)
-    @foreach($father as $key => $item)
+
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-title">
                     <h5>
-                        {{$item->class_name}}
+                        内容分类列表
                     </h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a>
-                            <i class="fa fa-minus-circle"></i>
-                        </a>
-                        <a>
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
                 </div>
                 <div class="ibox-content table-responsive">
                     <table style="border: 1px solid #e7eaec;" class="table table-bordered table-striped">
@@ -62,37 +50,57 @@
                         <tr>
                             <th data-toggle="true">ID</th>
                             <th data-toggle="true">分类名称</th>
+                            <th data-toggle="true">等级</th>
                             <th data-hide="phone">创建时间</th>
                             <th data-hide="phone">显示</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody id="layer-photos">
-                        <tr>
-                            <td class="text-center" data-toggle="true">{{$item->id}}</td>
-                            <td class="text-center" data-toggle="true">{{$item->class_name}}</td>
-                            <td class="text-center" data-hide="phone">{{$item->created_at}}</td>
-                            <td class="text-center" data-hide="phone"></td>
-                            <td class="text-center" style="min-width: 230px;">
-                                <button class="btn btn-sm btn-info edit" data-id="{{$item->id}}">
-                                    <i class="fa fa-edit"></i> 编辑
-                                </button>
-                                <button class="btn btn-sm btn-info edit" data-id="{{$item->id}}">
-                                    <i class="fa fa-minus-circle"></i> 隐藏
-                                </button>
-                                <button class="btn btn-sm btn-danger del" data-title="{{$item->class_name}}" data-id="{{$item->id}}">
-                                    <i class="fa fa-times"></i> 删除
-                                </button>
-                            </td>
-                        </tr>
+                            @if($list)
+                                @foreach($list as $key => $item)
+                                <tr>
+                                    <td class="text-center" data-toggle="true">{{$item->id}}</td>
+                                    <td class="left" data-toggle="true"> ├{{str_repeat('──', ($item->level -1))}} {{$item->class_name}}</td>
+                                    <td class="text-center" data-hide="phone">{{$item->level}}</td>
+                                    <td class="text-center" data-hide="phone">{{$item->created_at}}</td>
+                                    @if($item->is_show)
+                                        <td class="text-center" data-hide="phone">显示</td>
+                                    @else
+                                        <td class="text-center" data-hide="phone">隐藏</td>
+                                    @endif
+                                    <td class="text-center" style="min-width: 230px;">
+                                        <button class="btn btn-sm btn-info edit"
+                                                data-id="{{$item->id}}">
+                                            <i class="fa fa-edit"></i> 编辑
+                                        </button>
+                                        <button class="btn btn-sm btn-info is_show"
+                                                data-title="{{$item->class_name}}"
+                                                data-id="{{$item->id}}"
+                                                data-status="{{$item->is_del}}">
+                                            @if($item->is_show)
+                                                <i class="fa fa-minus-circle"></i> 隐藏
+                                            @else
+                                                <i class="fa fa-window-restore"></i> 显示
+                                            @endif
+                                        </button>
+                                        <button class="btn btn-sm btn-danger del"
+                                                data-title="{{$item->class_name}}"
+                                                data-id="{{$item->id}}"
+                                                data-status="{{$item->is_del}}">
+                                            <i class="fa fa-times"></i> 删除
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    @endforeach
-    @endif
+
 </div>
 @endsection
 
@@ -100,6 +108,7 @@
 <style>
     tr > th {text-align: center;}
     tr > td {vertical-align: middle !important;}
+    .left {text-align: left;}
 </style>
 @endsection
 

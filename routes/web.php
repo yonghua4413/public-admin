@@ -30,5 +30,6 @@ Route::group(['middleware' => \App\Http\Middleware\AdminMiddleware::class], func
     //分类
     Route::get('/content/classify', "ContentController@showClassify");
     Route::get('/content/classify/get', "ContentController@getClassify");
+    Route::post('/content/classify/modify', "ContentController@modifyContentClassify");
 });
 

@@ -87,7 +87,7 @@ class ContentController extends Controller
         $class_where = ['is_del' => 0];
         $class_info = $contentRepository->getContentClassList($class_where, $class_field);
         if ($class_info) {
-            $data['class'] = $this->helper->loopChild($class_info);
+            $data['class'] = $this->disposeLoopMenus($class_info);
         }
         $push_field = ['id', 'push_name'];
         $push_where = ['is_del' => 0];
@@ -114,7 +114,7 @@ class ContentController extends Controller
         $class_where = ['is_del' => 0];
         $class_info = $contentRepository->getContentClassList($class_where, $class_field);
         if ($class_info) {
-            $data['class'] = $this->helper->loopChild($class_info);
+            $data['class'] = $this->disposeLoopMenus($class_info);
         }
         $push_field = ['id', 'push_name'];
         $push_where = ['is_del' => 0];
@@ -210,21 +210,45 @@ class ContentController extends Controller
         if($list){
             $data['list'] = $this->disposeLoopMenus($list);
         }
-        dd($data);
         return view('content/classify/list', $data);
     }
 
-    private function disposeLoopMenus($list, $pid = 0)
+    /**
+     * 修改分类信息
+     * @param ContentRepository $contentRepository
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     */
+    public function modifyContentClassify(ContentRepository $contentRepository)
+    {
+        $id = $this->request->all("id");
+        $post = $this->request->post();
+        unset($post['id'], $post['_token']);
+        if(!$this->helper->checkUserAuth($contentRepository, $id)){
+            return response("page not fund", 404);
+        }
+        $where = ['id' => $id];
+        $data = array_merge($post, ['updated_at' => date('Y-m-d H:i:s')]);
+        $change = $contentRepository->upContentClassify($where, $data);
+        if($change){
+            return $this->helper->returnJson([0, [], "操作成功"]);
+        }
+        return $this->helper->returnJson([0, [], "操作失败， 请重试！"]);
+    }
+
+    private function disposeLoopMenus($list, $pid = 0, $level = 1)
     {
         $data = [];
-        foreach ($list as $key => $value){
-            $value->child = [];
-            if($value->pid == $pid){
-                array_push($data, $value);
+        if ($list && in_array($pid, array_column($list, 'pid'))) {
+            foreach ($list as $key => $value) {
+                if ($value->pid == $pid) {
+                    $value->level = $level;
+                    array_push($data, $value);
+                    unset($list[$key]);
+                    $next = $level + 1;
+                    $data = array_merge($data, $this->disposeLoopMenus($list, $value->id, $next));
+                }
             }
-            return $this->disposeLoopMenus($list, $value->id);
         }
-
         return $data;
     }
 }

@@ -27,19 +27,10 @@
                 <select class="form-control m-b" name="class_id">
                     <option value="0">未分类</option>
                     @foreach($class as $item)
-                        @if($info->class_id == $item['id'])
-                            <option selected value="{{$item['id']}}">{{$item['class_name']}}</option>
+                        @if($info->class_id == $item->id)
+                            <option selected value="{{$item->id}}"> ├{{str_repeat('──', ($item->level -1))}} {{$item->class_name}}</option>
                         @else
-                            <option value="{{$item['id']}}">{{$item['class_name']}}</option>
-                        @endif
-                        @if(count($item['child']))
-                            @foreach($item['child'] as $child )
-                                @if($info->class_id == $child['id'])
-                                    <option selected value="{{$child['id']}}"> &nbsp;&nbsp;&nbsp;--- {{$child['class_name']}}</option>
-                                @else
-                                    <option value="{{$child['id']}}"> &nbsp;&nbsp;&nbsp;--- {{$child['class_name']}}</option>
-                                @endif
-                            @endforeach
+                            <option value="{{$item->id}}"> ├{{str_repeat('──', ($item->level -1))}} {{$item->class_name}}</option>
                         @endif
                     @endforeach
                 </select>

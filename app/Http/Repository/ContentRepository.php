@@ -50,6 +50,11 @@ class ContentRepository
         return DB::table('article')->where($where)->update($data);
     }
 
+    public function upContentClassify($where, $data)
+    {
+        return DB::table('article_class')->where($where)->update($data);
+    }
+
     public function getContent($where, $field = ["*"])
     {
         return DB::table('article')->where($where)->first($field);
@@ -70,6 +75,7 @@ class ContentRepository
         return DB::table('article_class')
             ->where($where)
             ->orderBy('sort', 'desc')
-            ->get($field);
+            ->get($field)
+            ->toArray();
     }
 }

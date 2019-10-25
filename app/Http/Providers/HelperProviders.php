@@ -63,4 +63,26 @@ class HelperProviders
     {
         return 'HX' . uniqid() . mt_rand(1000, 9999);
     }
+
+    public function getAdminInfo()
+    {
+        return session(env("ADMIN"));
+    }
+
+    public function checkUserAuth($repository, $id)
+    {
+        $admin = $this->getAdminInfo();
+        if (!$admin) {
+            return false;
+        }
+        if ($admin['id'] == 1) {
+            return true;
+        }
+        $where = [['id', '=', $id], ['create_id', '=', $admin['id']]];
+        $has = app($repository)->checkExists($where);
+        if ($has) {
+            return true;
+        }
+        return false;
+    }
 }
