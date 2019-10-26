@@ -31,5 +31,9 @@ Route::group(['middleware' => \App\Http\Middleware\AdminMiddleware::class], func
     Route::get('/content/classify', "ContentController@showClassify");
     Route::get('/content/classify/get', "ContentController@getClassify");
     Route::post('/content/classify/modify', "ContentController@modifyContentClassify");
+    Route::get('/content/classify/add', "ContentController@showAddContentClassify");
+    Route::post('/content/classify/save', "ContentController@saveContentClassify");
+    Route::get('/content/classify/edit', "ContentController@showEditContentClassify");
+    Route::post('/content/classify/change', "ContentController@changeContentClassify");
 });
 

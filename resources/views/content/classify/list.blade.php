@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-sm-9">
                 <div class="form-group">
-                    <button class="btn btn-w-m btn-info add-content"><i class="fa fa-plus-circle"></i> 添加 </button>
+                    <button class="btn btn-w-m btn-info add-classify"><i class="fa fa-plus-circle"></i> 添加 </button>
                 </div>
             </div>
         </div>
@@ -51,6 +51,7 @@
                             <th data-toggle="true">ID</th>
                             <th data-toggle="true">分类名称</th>
                             <th data-toggle="true">等级</th>
+                            <th data-toggle="true">排序</th>
                             <th data-hide="phone">创建时间</th>
                             <th data-hide="phone">显示</th>
                             <th>操作</th>
@@ -63,6 +64,7 @@
                                     <td class="text-center" data-toggle="true">{{$item->id}}</td>
                                     <td class="left" data-toggle="true"> ├{{str_repeat('──', ($item->level -1))}} {{$item->class_name}}</td>
                                     <td class="text-center" data-hide="phone">{{$item->level}}</td>
+                                    <td class="text-center" data-hide="phone">{{$item->sort}}</td>
                                     <td class="text-center" data-hide="phone">{{$item->created_at}}</td>
                                     @if($item->is_show)
                                         <td class="text-center" data-hide="phone">显示</td>
@@ -70,14 +72,15 @@
                                         <td class="text-center" data-hide="phone">隐藏</td>
                                     @endif
                                     <td class="text-center" style="min-width: 230px;">
-                                        <button class="btn btn-sm btn-info edit"
-                                                data-id="{{$item->id}}">
-                                            <i class="fa fa-edit"></i> 编辑
+                                        <button class="btn btn-sm btn-success modify-classify"
+                                                data-id="{{$item->id}}"
+                                                data-title="{{$item->class_name}}">
+                                            <i class="fa fa-edit "></i> 编辑
                                         </button>
                                         <button class="btn btn-sm btn-info is_show"
                                                 data-title="{{$item->class_name}}"
                                                 data-id="{{$item->id}}"
-                                                data-status="{{$item->is_del}}">
+                                                data-status="{{$item->is_show}}">
                                             @if($item->is_show)
                                                 <i class="fa fa-minus-circle"></i> 隐藏
                                             @else

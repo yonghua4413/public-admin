@@ -65,6 +65,11 @@ class ContentRepository
         return DB::table('article')->where($where)->exists();
     }
 
+    public function checkClassifyExists($where)
+    {
+        return DB::table('article_class')->where($where)->exists();
+    }
+
     /**
      * @param array $where
      * @param array $field
@@ -77,5 +82,12 @@ class ContentRepository
             ->orderBy('sort', 'desc')
             ->get($field)
             ->toArray();
+    }
+
+    public function getContentClassify(array $where, array $field = ['*'])
+    {
+        return DB::table('article_class')
+            ->where($where)
+            ->first($field);
     }
 }

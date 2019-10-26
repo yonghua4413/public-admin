@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repository\ContentRepository;
+use App\Http\Repository\Repository;
 use Illuminate\Support\Facades\Validator;
 
 class ContentController extends Controller
@@ -14,6 +15,9 @@ class ContentController extends Controller
             'intro' => '简介',
             'cover_img' => '封面图',
             'content' => '内容'
+        ],
+        'article_class' => [
+            'class_name' => '分类名称'
         ]
     ];
 
@@ -200,13 +204,13 @@ class ContentController extends Controller
         if($change){
             return $this->helper->returnJson([0, [], "删除成功"]);
         }
-        return $this->helper->returnJson([0, [], "操作失败， 请重试！"]);
+        return $this->helper->returnJson([1, [], "操作失败， 请重试！"]);
     }
 
     public function showClassify(ContentRepository $contentRepository)
     {
         $data['list'] = [];
-        $list = $contentRepository->getContentClassifyList([]);
+        $list = $contentRepository->getContentClassifyList(['is_del' => 0]);
         if($list){
             $data['list'] = $this->disposeLoopMenus($list);
         }
@@ -226,13 +230,25 @@ class ContentController extends Controller
         if(!$this->helper->checkUserAuth($contentRepository, $id)){
             return response("page not fund", 404);
         }
+        if($this->checkClassify($id)){
+            return $this->helper->returnJson([1, [], "该分类下还有子分类，不能删除！"]);
+        }
         $where = ['id' => $id];
         $data = array_merge($post, ['updated_at' => date('Y-m-d H:i:s')]);
         $change = $contentRepository->upContentClassify($where, $data);
         if($change){
             return $this->helper->returnJson([0, [], "操作成功"]);
         }
-        return $this->helper->returnJson([0, [], "操作失败， 请重试！"]);
+        return $this->helper->returnJson([1, [], "操作失败， 请重试！"]);
+    }
+
+    private function checkClassify($class_id)
+    {
+        $exists = app(ContentRepository::class)->checkClassifyExists(['pid' => $class_id]);
+        if($exists){
+            return true;
+        }
+        return false;
     }
 
     private function disposeLoopMenus($list, $pid = 0, $level = 1)
@@ -250,5 +266,75 @@ class ContentController extends Controller
             }
         }
         return $data;
+    }
+
+    public function showAddContentClassify(ContentRepository $contentRepository)
+    {
+        $data['class_list'] = [];
+        $list = $contentRepository->getContentClassifyList(['is_del' => 0]);
+        if($list){
+            $data['class_list'] = $this->disposeLoopMenus($list);
+        }
+        return view("content/classify/add", $data);
+    }
+
+    public function showEditContentClassify(ContentRepository $contentRepository)
+    {
+        $data['class_list'] = [];
+        $id  = (int)$this->request->get('id');
+
+        $info = $contentRepository->getContentClassify(['id' => $id]);
+        if(!$info){
+            return response("page not fund", 404);
+        }
+        $data['info'] = $info;
+        $list = $contentRepository->getContentClassifyList(['is_del' => 0]);
+        if($list){
+            $data['class_list'] = $this->disposeLoopMenus($list);
+        }
+        return view("content/classify/edit", $data);
+    }
+
+    public function saveContentClassify(Repository $repository)
+    {
+        $post = $this->request->post();
+        $validator = Validator::make($this->request->post(), [
+            'class_name' => 'required'
+        ], [], self::$attributes['article_class']);
+        if ($validator->fails()) {
+            return $this->helper->returnJson([1, [], $validator->errors()->first()]);
+        }
+        $where = [['class_name', "=", $post['class_name']], ['is_del', '=', 0]];
+        if ($repository->checkExists("article_class", $where)) {
+            return $this->helper->returnJson([1, [], "该分类已经存在！"]);
+        }
+        unset($post['_token']);
+        $post['create_id'] = $this->admin['id'];
+        $post['created_at'] = date("Y-m-d H:i:s");
+        $insert = $repository->insert('article_class', $post);
+        if ($insert) {
+            return $this->helper->returnJson([0, [], "操作成功"]);
+        }
+        return $this->helper->returnJson([1, [], "操作失败， 请重试！"]);
+    }
+
+    public function changeContentClassify(Repository $repository)
+    {
+        $id = (int)$this->request->post('id');
+        $post = $this->request->post();
+        $validator = Validator::make($this->request->post(), [
+            'class_name' => 'required'
+        ], [], self::$attributes['article_class']);
+        if ($validator->fails()) {
+            return $this->helper->returnJson([1, [], $validator->errors()->first()]);
+        }
+        unset($post['_token'], $post['id']);
+        $post['update_id'] = $this->admin['id'];
+        $post['updated_at'] = date("Y-m-d H:i:s");
+        $change = $repository->update('article_class', ['id' => $id], $post);
+        if ($change) {
+            return $this->helper->returnJson([0, [], "操作成功"]);
+        }
+        return $this->helper->returnJson([1, [], "操作失败， 请重试！"]);
     }
 }
