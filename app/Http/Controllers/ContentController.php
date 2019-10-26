@@ -21,20 +21,6 @@ class ContentController extends Controller
         ]
     ];
 
-    private function checkUserAuth(int $record_id)
-    {
-        $create_id = $this->admin['id'];
-        if ($create_id == 1) {
-            return true;
-        }
-        $where = [['id', '=', $record_id], ['create_id', '=', $create_id]];
-        $has = app(ContentRepository::class)->checkExists($where);
-        if ($has) {
-            return true;
-        }
-        return false;
-    }
-
     public function showArticleList(ContentRepository $contentRepository)
     {
         $data['title'] = "";
@@ -102,9 +88,6 @@ class ContentController extends Controller
     public function showUpDataContent(ContentRepository $contentRepository)
     {
         $id = $this->request->get("id");
-        if(!$this->checkUserAuth($id)){
-            return response("page not fund", 404);
-        }
         $data['class'] = [];
         $data['push'] = [];
         $data['info'] = [];
@@ -153,7 +136,7 @@ class ContentController extends Controller
     public function upDateContent(ContentRepository $contentRepository)
     {
         $id = $this->request->post("id");
-        if(!$this->checkUserAuth($id)){
+        if(!$this->helper->checkUserAuth('article', $id)){
             return response("page not fund", 404);
         }
         $validator = Validator::make($this->request->post(), [
@@ -187,7 +170,7 @@ class ContentController extends Controller
         $where = ['id' => $this->request->get("id")];
         $info = $contentRepository->getContent($where, $field);
         if(!$info){
-            return response("page not fund", 404);
+            return response("", 404);
         }
         $data['info'] = $info;
         return view("content/preview", $data);
@@ -196,8 +179,8 @@ class ContentController extends Controller
     public function delContent(ContentRepository $contentRepository)
     {
         $id = $this->request->get("id");
-        if(!$this->checkUserAuth($id)){
-            return response("page not fund", 404);
+        if(!$this->helper->checkUserAuth('article', $id)){
+            return $this->helper->returnJson([1, [], "您没有权限"]);
         }
         $where = ['id' => $id];
         $change = $contentRepository->upDateContent($where, ['is_del' => 1]);
@@ -227,8 +210,8 @@ class ContentController extends Controller
         $id = $this->request->all("id");
         $post = $this->request->post();
         unset($post['id'], $post['_token']);
-        if(!$this->helper->checkUserAuth($contentRepository, $id)){
-            return response("page not fund", 404);
+        if(!$this->helper->checkUserAuth('article_class', $id)){
+            return $this->helper->returnJson([1, [], "您没有权限"]);
         }
         if($this->checkClassify($id)){
             return $this->helper->returnJson([1, [], "该分类下还有子分类，不能删除！"]);
@@ -282,7 +265,6 @@ class ContentController extends Controller
     {
         $data['class_list'] = [];
         $id  = (int)$this->request->get('id');
-
         $info = $contentRepository->getContentClassify(['id' => $id]);
         if(!$info){
             return response("page not fund", 404);

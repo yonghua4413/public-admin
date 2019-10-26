@@ -2,6 +2,7 @@
 
 namespace App\Http\Providers;
 
+use App\Http\Repository\Repository;
 use Illuminate\Support\Arr;
 use Qcloud\Sms\SmsSingleSender;
 
@@ -69,7 +70,7 @@ class HelperProviders
         return session(env("ADMIN"));
     }
 
-    public function checkUserAuth($repository, $id)
+    public function checkUserAuth($table, $id)
     {
         $admin = $this->getAdminInfo();
         if (!$admin) {
@@ -79,7 +80,7 @@ class HelperProviders
             return true;
         }
         $where = [['id', '=', $id], ['create_id', '=', $admin['id']]];
-        $has = app($repository)->checkExists($where);
+        $has = app(Repository::class)->checkExists($table, $where);
         if ($has) {
             return true;
         }
