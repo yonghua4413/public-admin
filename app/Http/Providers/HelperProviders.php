@@ -86,4 +86,21 @@ class HelperProviders
         }
         return false;
     }
+
+    public function disposeLoopData($list, $pid = 0, $level = 1)
+    {
+        $data = [];
+        if ($list && in_array($pid, array_column($list, 'pid'))) {
+            foreach ($list as $key => $value) {
+                if ($value->pid == $pid) {
+                    $value->level = $level;
+                    array_push($data, $value);
+                    unset($list[$key]);
+                    $next = $level + 1;
+                    $data = array_merge($data, $this->disposeLoopData($list, $value->id, $next));
+                }
+            }
+        }
+        return $data;
+    }
 }

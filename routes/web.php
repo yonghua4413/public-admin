@@ -35,5 +35,9 @@ Route::group(['middleware' => \App\Http\Middleware\AdminMiddleware::class], func
     Route::post('/content/classify/save', "ContentController@saveContentClassify");
     Route::get('/content/classify/edit', "ContentController@showEditContentClassify");
     Route::post('/content/classify/change', "ContentController@changeContentClassify");
+
+    //商品分类
+    Route::get('goods/classify', "GoodsController@showGoodsClassify");
+    Route::get('/goods/classify/add', "GoodsController@showAddGoodsClassify");
 });
 
