@@ -52,4 +52,13 @@ $(function () {
 
         });
     });
+
+    $('.content-images').on("click", function () {
+        layer.open({
+            'type':2,
+            'title':'浏览图片',
+            'area':['30%', '50%'],
+            'content':'/'
+        });
+    });
 });

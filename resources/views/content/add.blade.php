@@ -60,8 +60,8 @@
                 <input type="text" id="cover_img" name="cover_img" readonly class="form-control">
             </div>
             <div class="col-lg-4">
-                <span id="upload_img" class="upload-area"><i class="fa fa-upload"></i> 上传图片</span>
-                {{--<button class="btn btn-info"><i class="fa fa-file-image-o"></i> 本地图片</button>--}}
+                <span id="upload_img" style="float: left;" class="upload-area"><i class="fa fa-upload"></i> 上传图片</span>
+                <button style="float: left;margin-left: 5px;" class="btn btn-info content-images"><i class="fa fa-file-image-o"></i> 浏览图片</button>
             </div>
         </div>
         <div class="form-group">
