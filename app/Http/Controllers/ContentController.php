@@ -213,7 +213,7 @@ class ContentController extends Controller
         if(!$this->helper->checkUserAuth('article_class', $id)){
             return $this->helper->returnJson([1, [], "您没有权限"]);
         }
-        if($this->checkClassify($id)){
+        if(isset($post['is_del']) && $this->checkClassify($id)){
             return $this->helper->returnJson([1, [], "该分类下还有子分类，不能删除！"]);
         }
         $where = ['id' => $id];

@@ -14,7 +14,7 @@
 Route::get('/login', "LoginController@showLogin")->name('login');
 Route::get('/login/out', "LoginController@loginOut")->name('loginOut');
 Route::post('/login/doVerify', "LoginController@doVerify")->name('doVerify');
-
+//测试
 Route::get('/test', "TestController@test");
 
 Route::group(['middleware' => \App\Http\Middleware\AdminMiddleware::class], function () {
@@ -29,15 +29,16 @@ Route::group(['middleware' => \App\Http\Middleware\AdminMiddleware::class], func
     Route::get('/content/preview', "ContentController@showPreview");
     //分类
     Route::get('/content/classify', "ContentController@showClassify");
-    Route::get('/content/classify/get', "ContentController@getClassify");
     Route::post('/content/classify/modify', "ContentController@modifyContentClassify");
     Route::get('/content/classify/add', "ContentController@showAddContentClassify");
     Route::post('/content/classify/save', "ContentController@saveContentClassify");
     Route::get('/content/classify/edit', "ContentController@showEditContentClassify");
     Route::post('/content/classify/change', "ContentController@changeContentClassify");
-
     //商品分类
     Route::get('goods/classify', "GoodsController@showGoodsClassify");
+    Route::post('/goods/classify/modify', "GoodsController@modifyGoodsClassify");
     Route::get('/goods/classify/add', "GoodsController@showAddGoodsClassify");
+    Route::post('/goods/classify/save', "GoodsController@saveGoodsClassify");
+    Route::get('/goods/classify/edit', "GoodsController@showEditGoodsClassify");
+    Route::post('/goods/classify/change', "GoodsController@modifyGoodsClassify");
 });
-

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repository\Repository;
+use Illuminate\Support\Facades\Validator;
 
 class GoodsController extends Controller
 {
@@ -89,7 +90,7 @@ class GoodsController extends Controller
      * @param Repository $repository
      * @return \Illuminate\Http\JsonResponse
      */
-    public function modifyContentClassify(Repository $repository)
+    public function modifyGoodsClassify(Repository $repository)
     {
         $table = 'goods_class';
         $id = $this->request->all("id");
@@ -98,11 +99,15 @@ class GoodsController extends Controller
         if(!$this->helper->checkUserAuth($table, $id)){
             return $this->helper->returnJson([1, [], "您没有权限"]);
         }
-        if(isset($post['is_del']) && $repository->checkExists($table, $id)){
+        if(isset($post['is_del']) && $repository->checkExists($table, ['pid' => $id])){
             return $this->helper->returnJson([1, [], "该分类下还有子分类，不能删除！"]);
         }
         $where = ['id' => $id];
-        $data = array_merge($post, ['updated_at' => date('Y-m-d H:i:s')]);
+        $update = [
+            'updated_at' => date('Y-m-d H:i:s'),
+            'update_id' => $this->admin['id']
+        ];
+        $data = array_merge($post, $update);
         $change = $repository->update($table, $where, $data);
         if($change){
             return $this->helper->returnJson([0, [], "操作成功"]);

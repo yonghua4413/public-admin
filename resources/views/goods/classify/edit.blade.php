@@ -66,6 +66,6 @@
 <!-- iCheck -->
 <script src="/js/plugins/iCheck/icheck.min.js"></script>
 
-<script type="text/javascript" src="/js/my/content/classify/edit.js"></script>
+<script type="text/javascript" src="/js/my/goods/classify/edit.js"></script>
 </body>
 </html>
