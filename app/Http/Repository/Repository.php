@@ -75,16 +75,4 @@ class Repository
             ->forPage($this->page)
             ->paginate($this->offset);
     }
-
-    /**
-     * 恢复原始数据
-     */
-    private function __destruct()
-    {
-        $this->orderBy = [];
-        $this->limit = 0;
-        $this->group = [];
-        $this->offset = 10;
-        $this->page = 1;
-    }
 }
