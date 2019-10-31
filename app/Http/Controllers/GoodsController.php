@@ -55,7 +55,8 @@ class GoodsController extends Controller
     public function getAllGoodsClassify()
     {
         $repository = app(Repository::class);
-        return $repository->getList("goods_class", ['is_del' => 0], ['*'], ['sort' => 'desc']);
+        $repository->orderBy = ['sort' => 'desc'];
+        return $repository->getList("goods_class", ['is_del' => 0]);
     }
 
     /**

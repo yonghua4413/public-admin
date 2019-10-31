@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\DB;
 
 class Repository
 {
+    public $orderBy = [];
+    public $limit = 0;
+    public $group = [];
+    public $offset = 10;
+    public $page = 1;
+
     public function getOne($table, $where = [], $field = ['*'])
     {
         return DB::table($table)->where($where)->first($field);
@@ -31,27 +37,42 @@ class Repository
         return DB::table($table)->insertGetId($data);
     }
 
-    public function getList($table, $where = [], $field = ['*'], $orderBy = [], $limit = 0, $group = [])
+    public function getList($table, $where = [], $field = ['*'])
     {
         return DB::table($table)
             ->where($where)
-            ->when(count($orderBy), function ($query) use ($orderBy) {
-                foreach ($orderBy as $key => $item) {
+            ->when(count($this->orderBy), function ($query) {
+                foreach ($this->orderBy as $key => $item) {
                     $query->orderBy($key, $item);
                 }
             })
-            ->when(count($group), function ($query) use ($group) {
-                $query->groupBy($group);
+            ->when(count($this->group), function ($query) {
+                $query->groupBy($this->group);
             })
-            ->when($limit, function ($query) use ($limit) {
-                $query->limit($limit);
+            ->when($this->limit, function ($query) {
+                $query->limit($this->limit);
             })
             ->get($field)
             ->toArray();
     }
 
-    public function getListByPage($table, $where = [], $field = ['*'], $orderBy = [], $offset = 10, $page = 1, $group = [])
+    public function getEachPageList($table, $where = [], $field = ['*'])
     {
-
+        return DB::table($table)
+            ->select($field)
+            ->where($where)
+            ->when(count($this->orderBy), function ($query) {
+                foreach ($this->orderBy as $key => $item) {
+                    $query->orderBy($key, $item);
+                }
+            })
+            ->when(count($this->group), function ($query) {
+                $query->groupBy($this->group);
+            })
+            ->when($this->limit, function ($query) {
+                $query->limit($this->limit);
+            })
+            ->forPage($this->page)
+            ->paginate($this->offset);
     }
 }
